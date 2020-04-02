@@ -1,5 +1,5 @@
 # CSS-uglifier
-obfuscate your CSS
+obfuscate your CSS [here](https://zaydme.github.io/CSS-uglifier/)
 
 ### What does it do?
 It replaces class names with random strings. it simply obfuscate your css to make it harder to read.

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CSS-uglifier</title>
+<meta name="title" content="CSS-uglifier">
+<meta name="description" content="You stole css from somewhere else? and you wanna cover-up your crime?or you just want your code to be harder to read?CSS obfuscator is what you need.">
+<meta name="keywords" content="css, css-uglifier,css-ugly, css uglifier, css obfuscator,obfuscator,obfuscate,obfuscate css">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="language" content="English">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<body>
+<nav class="navbar navbar-dark mb-1 bg-primary">
+  <span class="navbar-brand mb-0 h1 float-none">CSS-uglifier</span>
+</nav>
+<div style="display:none" id="holder"></div>
+<div class="container-fluid">
+    <p class="p-1">
+        <b>What does it do?</b><br>
+        It replaces class names with random strings. it simply obfuscate your css to make it harder to read.<br>
+        <b>Example</b><br>
+       Input HTML: <code>&lt;span class="hello">&lt;/span></code> Input CSS: <code>.hello{color:red;}</code><br>
+       Output HTML: <code>&lt;span class="flxdz">&lt;/span></code> Output CSS: <code>.flxdz{color:red;}</code>
+    <p>
+    <div class="row justify-content-center">
+        <div class="form-group col-md-5">
+            <label for="inputhtml">Input HTML:</label>
+            <textarea class=" m-1 form-control" rows="10" id="inputhtml"></textarea>
+        </div>
+        <div class="form-group col-md-5">
+            <label for="inputhtml">Input CSS:</label>
+            <textarea class=" m-1 form-control" rows="10" id="inputcss"></textarea>
+        </div>
+    </div>
+    <div class="text-center p-1">
+    <button class="btn btn-primary w-25" onclick="uglify()">UGLIFY</button>
+    </div>
+    <div class="row justify-content-center">
+        <div class="form-group col-md-5">
+            <label for="inputhtml">Output HTML:</label>
+            <textarea class=" m-1 form-control" rows="10" id="outputhtml" readonly></textarea>
+        </div>
+        <div class="form-group col-md-5">
+            <label for="inputhtml">Output CSS:</label>
+            <textarea class=" m-1 form-control" rows="10" id="outputcss" readonly></textarea>
+        </div>
+    </div>
+</div>
+
+<script>
+    function uglify() {
+        let inputHtml = document.querySelector('#inputhtml').value
+        document.querySelector('#holder').innerHTML = inputHtml
+        let inputcss = document.querySelector('#inputcss').value
+
+        let elements = document.querySelectorAll('#holder *')
+        elements = Array.from(elements)
+        elements = elements.filter(e => e.className)
+        let classes = []
+        elements.map(e => e.className.split(' ').map(a => classes.push(a)))
+        classes.forEach((c, i) => {
+            classes[i] = {
+                old: c,
+                new: Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5)
+            }
+        })
+
+        let newCss = inputcss
+        classes.forEach(c => {
+            let regex = "\\." + c.old + "+?(?=[.{ #:])";
+            let r = new RegExp(regex, "g")
+            newCss = newCss.replace(r, `.${c.new}`)
+            let e = document.querySelector(`.${c.old}`)
+            e.classList.remove(c.old)
+            e.classList.add(c.new)
+        })
+        document.querySelector('#outputcss').value = newCss
+        document.querySelector('#outputhtml').value = document.querySelector('#holder').innerHTML
+    }
+</script>
+</body>
+
+</html>
